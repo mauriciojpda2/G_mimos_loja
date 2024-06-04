@@ -7,14 +7,6 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaView>
       <Text>Home</Text>
-      <Button
-        title="ir para login"
-        onPress={() => navigation.navigate('Login')}
-      />
-      <Button
-        title="ir para Register"
-        onPress={() => navigation.navigate('Register')}
-      />
     </SafeAreaView>
   )
 }
