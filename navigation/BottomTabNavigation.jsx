@@ -1,8 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Profile, Cart, Login, Register } from "../screens";
+import { Home, Profile, Cart, Login, Register, Search } from "../screens";
 import { Ionicons } from "@expo/vector-icons";
-import  Colors  from "../constants/index";
+import  COLORS  from "../constants/index";
 
 
 const Tab = createBottomTabNavigator();
@@ -31,20 +31,20 @@ const BottomTabNavigation = () => {
             tabBarIcon: ({focused}) => {
                 return <Ionicons name={focused ? "home" : "home-outline"}
                 size={24}
-                color={focused ? Colors.rosa : Colors.verde}
+                color={focused ? COLORS.rosa : COLORS.verde}
                 />
             }
         }}
         />
 
         <Tab.Screen 
-        name="Cart" 
-        component={Cart}
+        name="Search" 
+        component={Search}
         options={{
             tabBarIcon: ({focused}) => {
-                return <Ionicons name={focused ? "cart" : "cart-outline"}
+                return <Ionicons name={focused ? "search" : "search-outline"}
                 size={24}
-                color={focused ? Colors.rosa : Colors.verde}
+                color={focused ? COLORS.rosa : COLORS.verde}
                 />
             }
         }}
@@ -57,21 +57,11 @@ const BottomTabNavigation = () => {
             tabBarIcon: ({focused}) => {
                 return <Ionicons name={focused ? "person" : "person-outline"}
                 size={24}
-                color={focused ? Colors.rosa : Colors.verde}
+                color={focused ? COLORS.rosa : COLORS.verde}
                 />
             }
         }}
-        />
-        <Tab.Screen 
-        name="Login" 
-        component={Login}
-        />
-        <Tab.Screen 
-        name="Register" 
-        component={Register}
-        />
-        
-        
+        />   
     </Tab.Navigator>
   )
 }
