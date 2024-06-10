@@ -1,6 +1,6 @@
 const COLORS = {
-    rosa: "#FFBAC4",
-    verde: "#7FCDC4",
+    rosa: "#e8909d",
+    verde: "#4ecfc0",
     cinza: "#666666",
     branco: "#FFFFFF",
     preto: "#000000"
