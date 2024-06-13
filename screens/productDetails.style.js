@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     descText: {
-        fontFamily: "regular",
         fontSize: 14,
         textAlign: "justify",
         marginBottom: 12

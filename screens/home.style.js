@@ -3,7 +3,6 @@ import COLORS from "../constants/index.jsx";
 
 const styles = StyleSheet.create({
     textStyle: {
-        //fontFamily: "bold",
         fontSize: 40
     },
     appBarWrapper: {
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     location: {
-        //fontFamily: "semibold"
+        fontWeight: "bold",
         fontSize: 16,
         color: COLORS.cinza
     },
@@ -32,7 +31,6 @@ const styles = StyleSheet.create({
         zIndex: 999,
     },
     cartNumber: {
-        fontFamily: "regular",
         fontWeight: "600",
         fontSize: 10,
         color: COLORS.branco
