@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'
+import COLORS from '../constants';
+import bcrypt from 'bcryptjs';
+
+
 
 const Register = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -10,55 +15,71 @@ const Register = ({ navigation }) => {
   const [address, setAddress] = useState('');
   const [error, setError] = useState('');
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     setError('');
 
-    // Validação dos campos
-    if (!name || !email || !password || !confirmPassword || !address) {
-      setError('Por favor, preencha todos os campos.');
-      return;
-    }
+    console.log('Trying to register...');
+    
+    try {
+      // Validação dos campos
+      if (!name || !email || !password || !confirmPassword || !address) {
+        throw new Error('Por favor, preencha todos os campos.');
+      }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Por favor, insira um email válido.');
-      return;
-    }
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        throw new Error('Por favor, insira um email válido.');
+      }
 
-    if (password !== confirmPassword) {
-      setError('As senhas não coincidem!');
-      return;
-    }
+      if (password !== confirmPassword) {
+        throw new Error('As senhas não coincidem!');
+      }
 
+      // Criptografar a senha antes de armazená-la
+      const hashedPassword = bcrypt.hashSync(password, 10);
+
+      registerUser(hashedPassword);
+    } catch (error) {
+      console.error('Erro ao realizar o cadastro:', error.message);
+      setError(error.message);
+    }
+  };
+
+  const registerUser = async (hashedPassword) => {
     try {
       const storedUsers = await AsyncStorage.getItem('userData');
       const usersData = storedUsers ? JSON.parse(storedUsers) : [];
 
       const existingUser = usersData.find(user => user.email === email);
       if (existingUser) {
-        setError('E-mail já cadastrado!');
-        return;
+        throw new Error('E-mail já cadastrado!');
       }
 
       const newUser = {
         name,
         email,
-        password,
+        password: hashedPassword,
         address,
       };
 
       usersData.push(newUser);
       await AsyncStorage.setItem('userData', JSON.stringify(usersData));
 
+      console.log('Registration successful!');
       alert('Cadastro realizado com sucesso!');
       navigation.navigate('Login');
     } catch (error) {
-      console.error(error);
-      setError('Erro ao realizar o cadastro. Por favor, tente novamente.');
+      console.error('Erro ao realizar o cadastro:', error.message);
+      setError(error.message);
     }
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.upperRow}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Ionicons name='chevron-back-circle' size={30}/>
+        </TouchableOpacity>
+        </View>
       <Text style={styles.title}>Registro</Text>
       <TextInput
         placeholder="Nome"
@@ -93,8 +114,10 @@ const Register = ({ navigation }) => {
         style={styles.input}
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Button title="Registrar" onPress={handleRegister} />
-      <Button title="Voltar para Login" onPress={() => navigation.navigate('Login')} />
+      <View style={styles.btnStyle}>
+      <Button title="Registrar" onPress={handleRegister} color={COLORS.verde}/>
+      </View>
+
     </View>
   );
 };
@@ -117,11 +140,26 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     width: '100%',
+    borderRadius: 8,
+    color: COLORS.preto
   },
   error: {
     color: 'red',
     marginBottom: 10,
   },
+  upperRow: {
+    marginHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    position: "absolute",
+    top: 44,
+    width: '100%',
+    zIndex: 999  
+  },
+  btnStyle: {
+    width: '100%',
+  }
 });
 
 export default Register;

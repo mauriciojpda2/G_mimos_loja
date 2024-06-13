@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import COLORS from '../constants';
+import bcrypt from 'bcryptjs';
+
 
 const Login = () => {
   const navigation = useNavigation();
@@ -13,13 +16,15 @@ const Login = () => {
       const storedUsers = await AsyncStorage.getItem('userData');
       const usersData = storedUsers ? JSON.parse(storedUsers) : [];
 
-      const user = usersData.find(
-        user => user.email === email && user.password === password
-      );
-
+      const user = usersData.find(user => user.email === email);
       if (user) {
-        navigation.navigate('Bottom Navigator');
-        alert('Login realizado com sucesso!');
+        const passwordMatch = bcrypt.compareSync(password, user.password);
+        if (passwordMatch) {
+          navigation.navigate('Bottom Navigator');
+          alert('Login realizado com sucesso!');
+        } else {
+          alert('Credenciais incorretas!');
+        }
       } else {
         alert('Credenciais incorretas!');
       }
@@ -34,7 +39,7 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Image source={require('../assets/logo.png')} style={styles.imgStyle}/>
       <TextInput
         placeholder="E-mail"
         value={email}
@@ -48,8 +53,12 @@ const Login = () => {
         onChangeText={setPassword}
         style={styles.input}
       />
-      <Button title="Entrar" onPress={handleLogin} />
-      <Button title="Registrar" onPress={handleRegister} />
+        <View style={styles.btnContainer}>
+        <Button title="Entrar" onPress={handleLogin} color={COLORS.verde} />
+        </View>
+        <View style={styles.btnContainer1}>
+        <Button title="Registrar" onPress={handleRegister} color={COLORS.verde}  />
+        </View>
     </View>
   );
 };
@@ -62,9 +71,11 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 40,
+    color: COLORS.preto,
+   
   },
   input: {
     borderWidth: 1,
@@ -72,7 +83,20 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     width: '100%',
+    borderRadius: 8
   },
+  btnContainer: {
+    marginTop: 10,
+    width: '100%',
+    marginBottom: 20,
+  },
+  btnContainer1: {
+    width: '100%',
+  },
+  imgStyle: {
+    width: '110%',
+    marginBottom: 10,
+  }
 });
 
 export default Login;
