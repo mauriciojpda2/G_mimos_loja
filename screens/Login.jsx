@@ -3,7 +3,7 @@ import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity, Image } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import COLORS from '../constants';
-import bcrypt from 'bcryptjs';
+import crypto from 'crypto-js';
 
 
 const Login = () => {
@@ -18,8 +18,10 @@ const Login = () => {
 
       const user = usersData.find(user => user.email === email);
       if (user) {
-        const passwordMatch = bcrypt.compareSync(password, user.password);
-        if (passwordMatch) {
+        const hashedPassword = hashPassword(password);
+        if (hashedPassword === user.password) {
+          await AsyncStorage.setItem('currentUser', JSON.stringify(user));
+
           navigation.navigate('Bottom Navigator');
           alert('Login realizado com sucesso!');
         } else {
@@ -35,6 +37,10 @@ const Login = () => {
 
   const handleRegister = () => {
     navigation.navigate('Register');
+  };
+
+  const hashPassword = (password) => {
+    return crypto.SHA256(password).toString();
   };
 
   return (

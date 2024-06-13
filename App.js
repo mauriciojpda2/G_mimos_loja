@@ -13,11 +13,6 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
       <Stack.Screen
-          name='Bottom Navigator'
-          component={BottomTabNavigation}
-          options={{headerShown: false}}
-        />
-      <Stack.Screen
           name='Login'
           component={Login}
           options={{headerShown: false}}
@@ -25,6 +20,11 @@ export default function App() {
         <Stack.Screen
           name='Register'
           component={Register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name='Bottom Navigator'
+          component={BottomTabNavigation}
           options={{headerShown: false}}
         />
         <Stack.Screen

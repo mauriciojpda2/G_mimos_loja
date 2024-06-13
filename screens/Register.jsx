@@ -3,8 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'
 import COLORS from '../constants';
-import bcrypt from 'bcryptjs';
-
+import crypto from 'crypto-js';
 
 
 const Register = ({ navigation }) => {
@@ -21,7 +20,6 @@ const Register = ({ navigation }) => {
     console.log('Trying to register...');
     
     try {
-      // Validação dos campos
       if (!name || !email || !password || !confirmPassword || !address) {
         throw new Error('Por favor, preencha todos os campos.');
       }
@@ -34,14 +32,17 @@ const Register = ({ navigation }) => {
         throw new Error('As senhas não coincidem!');
       }
 
-      // Criptografar a senha antes de armazená-la
-      const hashedPassword = bcrypt.hashSync(password, 10);
+      const hashedPassword = hashPassword(password);
 
       registerUser(hashedPassword);
     } catch (error) {
       console.error('Erro ao realizar o cadastro:', error.message);
       setError(error.message);
     }
+  };
+
+  const hashPassword = (password) => {
+    return crypto.SHA256(password).toString();
   };
 
   const registerUser = async (hashedPassword) => {
